@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
 <script src="./dist/umd/vue.js"></script>
-<script>
-  console.log(Vue);
-</script>
+
 <body>
-  hello
+  <div id="app"></div>
+  <script>
+    let vm = new Vue({
+      el: '#app',
+      data() {
+        return { a: 1 }
+      }
+    })
+  </script>
 </body>
+
 </html>
