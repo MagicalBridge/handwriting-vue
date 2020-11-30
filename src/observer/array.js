@@ -16,7 +16,7 @@ let methods = [
 
 methods.forEach(method => {
   arrayMethods[method] = function (...args) {
-    console.log('数组的方法被调用了');
+    // console.log('数组的方法被调用了');
     // 这里使用的是apply方法
     const result = oldArrayPrototypeMethods[method].apply(this, args);
     let inserted;

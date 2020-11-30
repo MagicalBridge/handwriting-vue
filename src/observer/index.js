@@ -53,11 +53,11 @@ function defineReactive(data, key, value) {
   observe(value)
   Object.defineProperty(data, key, {
     get() {
-      console.log('用户获取值了');
+      // console.log('用户获取值了');
       return value;
     },
     set(newValue) {
-      console.log('用户设置值了');
+      // console.log('用户设置值了');
       if (newValue === value) {
         return
       }
