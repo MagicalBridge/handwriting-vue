@@ -14,9 +14,12 @@
     let vm = new Vue({
       el: '#app',
       data() {
-        return { a: 1 }
+        return {
+          a: [1, 2, 3, 4]
+        }
       }
-    })
+    });
+    console.log(vm._data.a.push(5));
   </script>
 </body>
 
