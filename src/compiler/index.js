@@ -1,17 +1,32 @@
 // 解析函数 如何解析这种标签
-{/* <div>hello <span>world</span></div> */}
+{/* <div>hello <span>world</span></div> */ }
 const ncname = `[a-zA-Z_][\\-\\.0-9_a-zA-Z]*` // 这个这则匹配的是标签名称 <aa-aa></aa-aa> 类似于这样的东西
 const qnameCapture = "((?:" + ncname + "\\:)?" + ncname + ")";
-var startTagOpen = new RegExp(("^<" + qnameCapture)); // 标签开头的正则表达式
-// var startTagClose = /^\s*(\/?)>/;
-var endTag = new RegExp(("^<\\/" + qnameCapture + "[^>]*>"));
-// var doctype = /^<!DOCTYPE [^>]+>/i;
-// #7298: escape - to avoid being pased as HTML comment when inlined in page
-// var comment = /^<!\--/;
-// var conditionalComment = /^<!\[/;
+const startTagOpen = new RegExp(("^<" + qnameCapture)); // 标签开头的正则表达式
+const endTag = new RegExp(("^<\\/" + qnameCapture + "[^>]*>"));
+const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/;
+const startTagClose = /^\s*(\/?)>/;
+const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g;
+
+// 处理开始标签 接收两个参数 一个是标签名称，一个是属性。
+function start(tagName, attrs) {
+
+}
+
+// 处理结束标签
+function end(tagName) {
+
+}
+
+// 处理文本
+function chars(text) {
+
+}
 
 function parseHTML(html) {
-
+  while (html) { // 只要html不为空字符串就一直解析
+    
+  }
 }
 
 export function compileToFunctions(template) {
@@ -22,4 +37,4 @@ export function compileToFunctions(template) {
   let ast = parseHTML(template); // 将template 转化成ast语法树
   // 2、通过这颗树 重新生成代码。
 
- }
+}
