@@ -25,7 +25,35 @@ function chars(text) {
 
 function parseHTML(html) {
   while (html) { // 只要html不为空字符串就一直解析
-    
+    // 首先看看标签是不是以尖角号开头的
+    let textend = html.indexOf('<');
+    // 使用 indexOf 判断 如果是0 说明确实是 以 <开头的
+    if (textend === 0) {
+      // 肯定是标签之后，就开始匹配开始标签
+      parseStartTag();
+      break;
+    }
+  }
+  // 前进方法, 将匹配到的字符串删除掉，继续匹配后面的内容
+  // 
+  function advance(n) {
+    // 将截取出来的字符串重新赋值给html
+    html = html.substring(n);
+  }
+  //  
+  function parseStartTag() {
+    // 字符串的match方法 返回的是一个数组
+    const start = html.match(startTagOpen);
+    if (start) { // 匹配到的数组不为空
+      // 创建一个对象
+      const match = {
+        tagName: start[1],
+        attrs: [],
+      }
+
+      console.log(match);
+    }
+    // console.log(start);
   }
 }
 
