@@ -8,23 +8,30 @@ const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s
 const startTagClose = /^\s*(\/?)>/;
 const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g;
 
+// 创建AST语法树
+function createASTElement(tagName, attrs) {
+  return {
+    tag: tagName,
+    type: 1,
+    children: [],
+    attrs,
+    parent: null
+  }
+}
+
 // 处理开始标签 接收两个参数 一个是标签名称，一个是属性。
 function start(tagName, attrs) {
-  console.log('开始标签 ——————————————————');
-  console.log(tagName);
-  console.log(attrs);
+  console.log(tagName, attrs, '————————— 开始标签 —————————');
 }
 
 // 处理结束标签
 function end(tagName) {
-  console.log('结束标签 ————————————————————');
-  console.log(tagName);
+  console.log(tagName, '————————— 结束标签 ————————');
 }
 
 // 处理文本
 function chars(text) {
-  console.log('文本————————————————————');
-  console.log(text);
+  console.log(text, '————————— 文本标签 —————————');
 }
 
 function parseHTML(html) {
@@ -34,16 +41,16 @@ function parseHTML(html) {
     // 使用 indexOf 判断 如果是0 说明确实是 以 <开头的
     if (textend === 0) {
       // 肯定是标签之后，就开始匹配开始标签
-      const startTagMatch  = parseStartTag(); // 这就是开始标签匹配的结果
-      if(startTagMatch) {
-        start(startTagMatch.tagName,startTagMatch.attrs);
+      const startTagMatch = parseStartTag(); // 这就是开始标签匹配的结果
+      if (startTagMatch) {
+        start(startTagMatch.tagName, startTagMatch.attrs);
         // 匹配完开始标签 需要进行下一轮的匹配
         continue;
       };
 
       // 开始匹配结束标签
       const endTagMatch = html.match(endTag);
-      if(endTagMatch) {
+      if (endTagMatch) {
         // 同样的匹配到的标签删除掉。
         advance(endTagMatch[0].length)
         end(endTagMatch[1]);
@@ -54,18 +61,17 @@ function parseHTML(html) {
     // 如果在下一个 < 的索引是大于0 的说明 第一个 开始标签匹配完之后到第二个开始标签
     // 中间的部分是有文本的。
     let text;
-    if(textend > 0) {
-      text = html.substring(0,textend); // substring 这个api的特点是不是包含头部而不包含尾部呢 这个需要确认一下。
+    if (textend > 0) {
+      text = html.substring(0, textend); // substring 这个api的特点是不是包含头部而不包含尾部呢 这个需要确认一下。
     }
     // 如果text 存在说明解析到了文本
-    if(text) {
+    if (text) {
       advance(text.length); // 继续截取 html 
       chars(text)
       // console.log(html); // <div id="my">hello {{name}}<span>world</span></div></div>
     }
   }
   // 前进方法, 将匹配到的字符串删除掉，继续匹配后面的内容
-  // 
   function advance(n) {
     // 将截取出来的字符串重新赋值给html
     html = html.substring(n);
@@ -101,7 +107,7 @@ function parseHTML(html) {
         // console.log(html);
       }
       // 循环完毕属性之后 还会有一个结束标签 我们也要将结束标签去掉
-      if(end) {
+      if (end) {
         // 如果哦结束标签存在的话,将结束标签也去掉。
         advance(end[0].length);
         return match // 将 match的结果返回出去,开头的标签匹配宣告结束。
