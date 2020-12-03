@@ -8,33 +8,51 @@ const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s
 const startTagClose = /^\s*(\/?)>/;
 const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g;
 
-// 创建AST语法树
-function createASTElement(tagName, attrs) {
-  return {
-    tag: tagName,
-    type: 1,
-    children: [],
-    attrs,
-    parent: null
-  }
-}
-
-// 处理开始标签 接收两个参数 一个是标签名称，一个是属性。
-function start(tagName, attrs) {
-  console.log(tagName, attrs, '————————— 开始标签 —————————');
-}
-
-// 处理结束标签
-function end(tagName) {
-  console.log(tagName, '————————— 结束标签 ————————');
-}
-
-// 处理文本
-function chars(text) {
-  console.log(text, '————————— 文本标签 —————————');
-}
 
 function parseHTML(html) {
+  // 创建AST语法树
+  function createASTElement(tagName, attrs) {
+    return {
+      tag: tagName, // 标签名称
+      type: 1, // 元素类型
+      children: [], // 孩子列表
+      attrs, // 属性集合
+      parent: null // 父元素
+    }
+  }
+  // 根标签
+  let root;
+  // 处理开始标签 接收两个参数 一个是标签名称，一个是属性。
+  let currentParent; // 标识当前的父节点
+  function start(tagName, attrs) {
+    // console.log(tagName, attrs, '————————— 开始标签 —————————');
+    // 创建一个元素
+    let element = createASTElement(tagName, attrs);
+    if (!root) { // 如果没有根元素，这个创建的元素就是根元素。
+      root = element;
+    }
+    // 当前解析的标签 保存起来
+    currentParent = element;
+  }
+
+  // 处理结束标签
+  function end(tagName) {
+    console.log(tagName, '————————— 结束标签 ————————');
+  }
+
+  // 处理文本
+  function chars(text) {
+    // console.log(text, '————————— 文本标签 —————————');
+    text = text.replace(/\s/g, ''); //用正则 将文本标签中的空格去掉
+    if (text) { // 去掉空格之后 如果文本还存在
+      currentParent.children.push({
+        type: 3, // 文本类型
+        text
+      })
+    }
+  }
+
+
   while (html) { // 只要html不为空字符串就一直解析
     // 首先看看标签是不是以尖角号开头的
     let textend = html.indexOf('<');
@@ -116,6 +134,8 @@ function parseHTML(html) {
     }
 
   }
+  // 将这个树返回出去
+  return root;
 }
 
 export function compileToFunctions(template) {
@@ -125,5 +145,6 @@ export function compileToFunctions(template) {
   // 前端需要掌握的数据结构 （树）
   let ast = parseHTML(template); // 将template 转化成ast语法树
   // 2、通过这颗树 重新生成代码。
+  console.log(ast);
 
 }
