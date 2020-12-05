@@ -1,3 +1,4 @@
+import { generate } from "./generate";
 import { parseHTML } from "./parse";
 
 export function compileToFunctions(template) {
@@ -7,9 +8,13 @@ export function compileToFunctions(template) {
   // 前端需要掌握的数据结构 （树）
   let ast = parseHTML(template); // 将template 转化成ast语法树
   // 2、通过这颗树 重新生成代码。
-  // console.log(ast);
+  console.log(ast);
 
   // 3、通过这颗树, 重新生成代码
   let code = generate(ast);
+
+  render() {
+    return _c('div', { id: 'app', style: { color: 'red' } }, _v('hello' + _s(name)),_c('span',null,_v('hello')))
+  }
 
 }

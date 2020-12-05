@@ -24,6 +24,7 @@ export function parseHTML(html) {
   let root;
   // 处理开始标签 接收两个参数 一个是标签名称，一个是属性。
   let currentParent; // 标识当前的父节点
+  let stack = [];
   function start(tagName, attrs) {
     // console.log(tagName, attrs, '————————— 开始标签 —————————');
     // 创建一个元素
