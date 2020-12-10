@@ -25,5 +25,5 @@ export function compileToFunctions(template) {
   //          _v( 'hello' + _s(name)), _c('span',null, _v('hello'))
   //          )
   // }
-
+  console.log(code);
 }
