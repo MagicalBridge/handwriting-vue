@@ -13,8 +13,17 @@ export function compileToFunctions(template) {
   // 3、通过这颗树, 重新生成代码
   let code = generate(ast);
 
-  render() {
-    return _c('div', { id: 'app', style: { color: 'red' } }, _v('hello' + _s(name)),_c('span',null,_v('hello')))
-  }
+  // _c 类似于react中的 createElement 
+  // _v 创建虚拟节点
+  // _s 可以看成是json.stringify();
+  // render() {
+  //   return _c('div', 
+  //              { 
+  //                id: 'app', 
+  //                style: { color: 'red' } 
+  //              }, 
+  //          _v( 'hello' + _s(name)), _c('span',null, _v('hello'))
+  //          )
+  // }
 
 }
