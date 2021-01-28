@@ -4,7 +4,7 @@ import serve from 'rollup-plugin-serve';
 export default {
   input: './src/index.js', // 入口配置, 以这个入口打包。
   output: {
-    format: 'umd', // 模块化的类型 这里使用umd的规范
+    format: 'umd', // 模块化的类型 这里使用umd的规范 这个规范的
     name: 'Vue', // 全局变量的名字
     file: 'dist/umd/vue.js',
     sourcemap: true
