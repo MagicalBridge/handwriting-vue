@@ -8,10 +8,11 @@ class Observer {
     // object.defineProperty 方法会直接在一个对象上定义一个新属性。
     // 或者修改一个对象的现有属性，并返回此对象。
     // 判断一个对象是否被观测过，看它有没有 __ob__ 属性
+    // 不可枚举的好处是不会造成死循环
     Object.defineProperty(value, '__ob__', {
       enumerable: false, // 属性是否可以枚举，这里写的是不可枚举 循环的时候不会循环到这个属性
       configurable: false, // 
-      value: this // 
+      value: this // 代表的是当前的 Observer 实例
     })
 
 
@@ -19,14 +20,17 @@ class Observer {
     // 对于数组来说需要进行特护处理
     if (Array.isArray(value)) {
       // 调用push shift unshift splice sort reverse pop
-      // 这种写法叫做函数劫持、切片编程
+      // 这种写法叫做函数劫持、切片编程 高阶函数
       value.__proto__ = arrayMethods;
       // 对于数组来说，里面的元素很可能还是一个对象，这样的话，需要针对这种情况单独处理。
+      // 具体做法还是遍历数组 
       this.observeArray(value);
     } else {
       this.walk(value)
     }
   }
+  // 观测数组，针对数组中的每一项 调用 observe 方法 observe方法自带类型判断
+  // 如果是对象类型才会做观测
   observeArray(value) {
     value.forEach(item => {
       observe(item); // 观测数组中的对象类型
@@ -36,7 +40,7 @@ class Observer {
     // 因为传入的是一个对象，使用 Object.keys 将其转化为数组
     // 使用 Object.keys 这种方式 不会去遍历原型链 只会拿到私有属性
     let keys = Object.keys(data);
-    // 遍历数组
+    // 遍历数组 
     keys.forEach((key) => {
       // 这个函数vue源码中单独定义在 util 中
       defineReactive(data, key, data[key]);
@@ -78,7 +82,8 @@ export function observe(data) {
     return;
   }
   // 这里做一个判断，如果当前的这个数据已经被响应过的话
-  // 直接返回就好，不需要重新再响应式一遍。
+  // 直接返回就好，不需要重新再响应式一遍。这个是 Observer 这个类中的constructor上
+  // 定义的属性 所有被观测的属性，都具有这个方法
   if (data.__ob__) {
     return data;
   }
