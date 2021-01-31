@@ -8,7 +8,7 @@ export function initMixin(Vue) {
     const vm = this;
     // 将用户传递进来的配置选项赋值给当前实例的$options属性
     vm.$options = options;
-    // 初始化数据
+    // 初始化数据 将当前的实例传递进去
     initState(vm);
 
     // 如果当前有el属性，说明要渲染模板

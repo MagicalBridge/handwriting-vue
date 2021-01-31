@@ -10,3 +10,7 @@ export function proxy(vm, data, key) {
     }
   })
 }
+
+export function isObject(val) {
+  return typeof val === 'object' && val !== null
+}

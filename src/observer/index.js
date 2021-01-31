@@ -1,3 +1,4 @@
+import { isObject } from "../util";
 import { arrayMethods } from "./array";
 
 // 这个文件是用于观测数据的变化的
@@ -33,6 +34,7 @@ class Observer {
   }
   walk(data) {
     // 因为传入的是一个对象，使用 Object.keys 将其转化为数组
+    // 使用 Object.keys 这种方式 不会去遍历原型链 只会拿到私有属性
     let keys = Object.keys(data);
     // 遍历数组
     keys.forEach((key) => {
@@ -43,9 +45,9 @@ class Observer {
 }
 /**
  * 
- * @param {*} data 定义的数据
- * @param {*} key 对应的key
- * @param {*} value key 对应的value
+ * @param {*} data 定义的对象
+ * @param {*} key 定义哪一个key呀
+ * @param {*} value key对应的value是什么
  */
 function defineReactive(data, key, value) {
   // 这里需要一个递归的调用, 将传入的值再次放入 observe 检测一下。
@@ -62,6 +64,7 @@ function defineReactive(data, key, value) {
         return
       }
       // 在设置值的时候 有可能设置的还是一个对象，这个时候也需要对设置的值进行响应式的观测
+      // vm._data.a = {b:1}
       observe(value)
       value = newValue;
     }
@@ -69,13 +72,14 @@ function defineReactive(data, key, value) {
 }
 
 export function observe(data) {
-  // 观测的对象是有条件的，如果不是对象，或者是一个null 就不进行观测
-  if (typeof data !== 'object' || data === null) {
-    return data;
+  // 观测的数据是有条件的 观测的内容必须是一个对象，且不能是null
+  // 如果不是对象直接return 不做后续处理
+  if (!isObject(data)) {
+    return;
   }
   // 这里做一个判断，如果当前的这个数据已经被响应过的话
   // 直接返回就好，不需要重新再响应式一遍。
-  if(data.__ob__) {
+  if (data.__ob__) {
     return data;
   }
 
