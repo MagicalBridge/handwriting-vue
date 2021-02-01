@@ -8,7 +8,7 @@ export function initMixin(Vue) {
     const vm = this;
     // 将用户传递进来的配置选项赋值给当前实例的$options属性
     vm.$options = options;
-    // 初始化数据 将当前的实例传递进去
+    // 初始化数据 将当前的实例传递进去 数据劫持 
     initState(vm);
 
     // 如果当前有el属性，说明要渲染模板
@@ -16,7 +16,9 @@ export function initMixin(Vue) {
       vm.$mount(vm.$options.el)
     };
   }
-  // 在原型链上添加 mount 方法
+  // 在原型链上添加 mount 方法  为什么要将模板转换为渲染函数
+  // 主要是因为 函数的效率很高呀, 检测到数据变化时候就重新执行一下
+  // 函数 当然render 也可以用户自己手动书写 用户手动书写的render方法优先级要高一些
   Vue.prototype.$mount = function (el) {
     const vm = this;
     const options = vm.$options;
@@ -29,7 +31,7 @@ export function initMixin(Vue) {
       let template = options.template;
       if (!template && el) { // 没有template 但是存在 el
         template = el.outerHTML;
-        // console.log(template); // 这里拿到的其实是一个字符串
+        // console.log(template); // <div id="app">{{name}}</div> 这里拿到的其实是一个字符串
       }
       // compileToFunctions 接收一个字符串模板 生成一个render函数
       const render = compileToFunctions(template);

@@ -9,10 +9,8 @@ export function compileToFunctions(template) {
   let ast = parseHTML(template); // 将template 转化成ast语法树
   // 2、通过这颗树 重新生成代码。
   console.log(ast);
-
   // 3、通过这颗树, 重新生成代码
   let code = generate(ast);
-
   // _c 类似于react中的 createElement 
   // _v 创建虚拟节点
   // _s 可以看成是json.stringify();

@@ -1,14 +1,15 @@
 // 解析函数 如何解析这种标签
 {/* <div>hello <span>world</span></div> */ }
 const ncname = `[a-zA-Z_][\\-\\.0-9_a-zA-Z]*` // 这个这则匹配的是标签名称 <aa-aa></aa-aa> 类似于这样的东西
-const qnameCapture = "((?:" + ncname + "\\:)?" + ncname + ")";
+const qnameCapture = "((?:" + ncname + "\\:)?" + ncname + ")"; // 用来获取标签名称
 const startTagOpen = new RegExp(("^<" + qnameCapture)); // 标签开头的正则表达式
-const endTag = new RegExp(("^<\\/" + qnameCapture + "[^>]*>"));
+const endTag = new RegExp(("^<\\/" + qnameCapture + "[^>]*>")); // y用来匹配闭合标签的
 const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/;
 const startTagClose = /^\s*(\/?)>/;
-const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g;
+const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g; // 匹配双大括号
 
-
+// 这里为什么要使用while循环呢,解析完一段就删除，直到字符串为空
+// 说明解析完毕
 export function parseHTML(html) {
   // 创建AST语法树
   function createASTElement(tagName, attrs) {

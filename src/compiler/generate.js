@@ -22,6 +22,7 @@ function genProps(attrs) {
 
   for (let i = 0; i < attrs.length; i++) {
     let attr = attrs[i];
+    // 对于style标签做特殊处理
     if (attr.name === 'style') {
       let obj = {};
       attr.value.split(';').forEach(item => {
@@ -39,6 +40,8 @@ function genProps(attrs) {
 // 
 export function generate(el) {
   // 这里面 el.tag 就是div
-  let code = `_c('${el.tag}',${el.attrs.length ? `${genProps(el.attrs)}` : 'undefined'})`;
+  let code = `_c('${el.tag}',
+    ${el.attrs.length ? `${genProps(el.attrs)}` : 'undefined'
+  })`;
   return code;
 }
