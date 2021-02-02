@@ -3,10 +3,12 @@ import { compileToFunctions } from './compiler/index.js'
 
 // 导出一个方法 初始化混合 表示在vue基础上做一次混合操作
 export function initMixin(Vue) {
+  // 这里的options是形参
   Vue.prototype._init = function (options) {
-    // 使用new操作符进行调用，原型中this指向实例，这里将this保存下来给vm变量
+    // 使用new操作符进行调用构造函数的时候，原型方法中的this指向当前实例，
+    // 这里将this保存下来给vm变量
     const vm = this;
-    // 将用户传递进来的配置选项赋值给当前实例的$options属性
+    // 将用户传递进来的配置选项赋值给当前实例的$options属性,保存
     vm.$options = options;
     // 初始化数据 将当前的实例传递进去 数据劫持 
     initState(vm);
