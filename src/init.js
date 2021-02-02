@@ -29,13 +29,14 @@ export function initMixin(Vue) {
     // console.log(el);
 
     if (!options.render) {
-      // 没有render 将template 转化为 render 
+      // 没有render将template转化成render方法 
       let template = options.template;
       if (!template && el) { // 没有template 但是存在 el
         template = el.outerHTML;
-        // console.log(template); // <div id="app">{{name}}</div> 这里拿到的其实是一个字符串
+        console.log(template); // <div id="app">{{name}}</div> 这里拿到的其实是一个字符串
       }
       // compileToFunctions 接收一个字符串模板 生成一个render函数
+      // 这是单独的一个编译的模块
       const render = compileToFunctions(template);
       // 将生成的render 函数传递给 options 之后实例中可以引用了。
       options.render = render;
