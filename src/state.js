@@ -43,7 +43,7 @@ function initData(vm) {
   // 否则就用原来的data赋值，这里call是为了保证this指向。永远指向当前实例new出来的对象实例
   // 为了让实例能够方便的拿到data将函数执行的结果进行赋值。赋值给 _data
   vm._data = data = typeof data === 'function' ? data.call(vm) : data;
-
+  
   // 这里设置一个代理 当我们访问 this.xxx 属性的时候其实访问的是data上面的属性
   // vm.xxx === vm._data.xxx 这两种取值方式是等价的
   // 设置值的时候也这样进行操作

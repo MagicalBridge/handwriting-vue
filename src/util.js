@@ -11,6 +11,11 @@ export function proxy(vm, data, key) {
   })
 }
 
+/**
+ * 判断一个数据是不是对象类型
+ * @param {*} val
+ * @return 返回一个布尔值
+ */
 export function isObject(val) {
   return typeof val === 'object' && val !== null
 }

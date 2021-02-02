@@ -6,19 +6,16 @@ class Observer {
   constructor(value) {
     // 这里使用defineProperty 定义一个 __ob__ 属性
     // object.defineProperty 方法会直接在一个对象上定义一个新属性。
-    // 或者修改一个对象的现有属性，并返回此对象。
-    // 判断一个对象是否被观测过，看它有没有 __ob__ 属性
-    // 不可枚举的好处是不会造成死循环
+    // 或者修改一个对象的现有属性，并返回此对象。判断一个对象是否被观测过，看它有没有 __ob__ 属性
+    // 注意 使用这个方法定义的属性是不会被枚举的到，不可枚举的好处是不会造成死循环
     Object.defineProperty(value, '__ob__', {
       enumerable: false, // 属性是否可以枚举，这里写的是不可枚举 循环的时候不会循环到这个属性
-      configurable: false, // 
-      value: this // 代表的是当前的 Observer 实例
+      configurable: false, 
+      value: this // 代表的是当前的 Observer 实例 赋值给 __ob__ 类似于这样 {__ob__: Observer }
     })
 
-
-    // 这里调用了walk方法，意思是将每一个属性都定义成 响应式的。
-    // 对于数组来说需要进行特护处理
-    if (Array.isArray(value)) {
+    // 这里调用了walk方法，意思是将每一个属性都定义成响应式的。
+    if (Array.isArray(value)) { // 对于数组来说需要进行特护处理
       // 调用push shift unshift splice sort reverse pop
       // 这种写法叫做函数劫持、切片编程 高阶函数
       value.__proto__ = arrayMethods;
@@ -38,11 +35,12 @@ class Observer {
   }
   walk(data) {
     // 因为传入的是一个对象，使用 Object.keys 将其转化为数组
-    // 使用 Object.keys 这种方式 不会去遍历原型链 只会拿到私有属性
+    // 使用 Object.keys 这种方式不会去遍历原型链上的属性
+    // 只会拿到自己的私有属性
     let keys = Object.keys(data);
     // 遍历数组 
     keys.forEach((key) => {
-      // 这个函数vue源码中单独定义在 util 中
+      // defineReactive 这个函数vue源码中单独定义在util中 就是做响应式用的
       defineReactive(data, key, data[key]);
     })
   }
@@ -55,7 +53,7 @@ class Observer {
  */
 function defineReactive(data, key, value) {
   // 这里需要一个递归的调用, 将传入的值再次放入 observe 检测一下。
-  // 如果value还是一个对象，继续进行递归响应式
+  // 如果value还是一个对象，继续进行递归响应式。
   observe(value)
   Object.defineProperty(data, key, {
     get() {
@@ -70,25 +68,26 @@ function defineReactive(data, key, value) {
       // 在设置值的时候 有可能设置的还是一个对象，这个时候也需要对设置的值进行响应式的观测
       // vm._data.a = {b:1}
       observe(value)
+      // 将新的值赋值给value
       value = newValue;
     }
   })
 }
 
 export function observe(data) {
-  // 观测的数据是有条件的 观测的内容必须是一个对象，且不能是null
-  // 如果不是对象直接return 不做后续处理
+  // 响应式数据是有条件的, 观测的内容必须是一个对象，且不能是null
+  // 如果不是对象直接return不做后续处理，这一步的判断非常重要
+  // 因为后续会有递归操作的, 递归的终止条件就是走进来的数据是一个基本数据类型
   if (!isObject(data)) {
     return;
   }
   // 这里做一个判断，如果当前的这个数据已经被响应过的话
   // 直接返回就好，不需要重新再响应式一遍。这个是 Observer 这个类中的constructor上
-  // 定义的属性 所有被观测的属性，都具有这个方法
+  // 定义的属性，所有被观测的属性，都具有这个属性
   if (data.__ob__) {
     return data;
   }
 
   // 对于观测数据，这是一个单独的功能，提取成一个类，将内部的一些方法耦合在一起
   return new Observer(data);
-  // console.log(data);
 }
