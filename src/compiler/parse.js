@@ -8,8 +8,7 @@ const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s
 const startTagClose = /^\s*(\/?)>/;
 const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g; // 匹配双大括号
 
-// 这里为什么要使用while循环呢,解析完一段就删除，直到字符串为空
-// 说明解析完毕
+// 这里为什么要使用while循环呢,解析完一段就删除，直到字符串为空说明解析完毕
 export function parseHTML(html) {
   // 创建AST语法树
   function createASTElement(tagName, attrs) {
@@ -26,6 +25,12 @@ export function parseHTML(html) {
   // 处理开始标签 接收两个参数 一个是标签名称，一个是属性。
   let currentParent; // 标识当前的父节点
   let stack = [];
+
+  /**
+   * 开始标签 标签名称 和属性
+   * @param {*} tagName 
+   * @param {*} attrs 
+   */
   function start(tagName, attrs) {
     // console.log(tagName, attrs, '————————— 开始标签 —————————');
     // 创建一个元素
@@ -66,15 +71,67 @@ export function parseHTML(html) {
     }
   }
 
+  // 前进方法, 将匹配到的字符串删除掉，继续匹配后面的内容
+  // 这个substring方法：用于提取字符串中介于两个指定下标之间的字符
+  // stringObject.substring(start, stop)
+  // start 这个参数是必须的 一个非负的整数 规定要提取的的子串的第一个字符在stringObject中的位置
+  // stop 比要提取的子串的最后一个字符在stringObject中的位置多1 通俗来说 这是包头不包尾
+  function advance(n) {
+    // 将截取出来的字符串重新赋值给html
+    html = html.substring(n);
+  }
+  // 匹配开始标签
+  function parseStartTag() {
+    // 字符串的match方法可以在字符串内部检索指定的值，或者找到一个或者多个正则表达式的匹配
+    // 这个方法类似于 indexOf 但是它返回固定的值，而不是字符串的位置
+    // stringObject.match(searchValue)
+    // stringObject.match(regexp)
+    // 返回值是存放匹配结果的数组 该数组的内容依赖于 regexp 是否具有全局标志 g
+    const start = html.match(startTagOpen);
+    if (start) { // 匹配到的数组不为空
+      // 创建一个对象
+      const match = {
+        tagName: start[1],
+        attrs: [],
+      }
+      // 传入的这个是 <div 的长度删除开始标签
+      advance(start[0].length);
+      // console.log(html);
+      // 开始匹配属性，这个属性可能有多个，所以这里使用while循环
+      // 循环的条件是 不是闭合标签标签，且属性还没有匹配完毕
+      // 这种写法还是第一次看见
+      let end;
+      let attr;
+      // startTagClose 匹配的是闭合标签 attr 匹配的是属性
+      while (!(end = html.match(startTagClose)) && (attr = html.match(attribute))) {
+        // 根据正则匹配的规则能够将 属性进行分组
+        match.attrs.push({
+          name: attr[1],
+          value: attr[3] || attr[4] || attr[5]
+        })
+        // 匹配完毕属性之后继续前进，前进多少呢，当前匹配字符串的第0个的length;
+        advance(attr[0].length);
+        // console.log(html);
+      }
+      // 循环完毕属性之后 还会有一个结束标签 我们也要将结束标签去掉
+      if (end) { // >
+        // 如果哦结束标签存在的话,将结束标签也去掉。
+        advance(end[0].length);
+        // match 是一个对象
+        return match // 将 match的结果返回出去,开头的标签匹配宣告结束。
+      }
+    }
+  }
+
 
   while (html) { // 只要html不为空字符串就一直解析
     // 首先看看标签是不是以尖角号开头的
     let textend = html.indexOf('<');
-    // 使用 indexOf 判断 如果是0 说明确实是 以 <开头的
-    if (textend === 0) {
+    // 使用 字符串的indexOf方法 判断如果是0 说明确实是 以 <开头的 肯定是个开头标签
+    if (textend === 0) { 
       // 肯定是标签之后，就开始匹配开始标签
       const startTagMatch = parseStartTag(); // 这就是开始标签匹配的结果
-      if (startTagMatch) {
+      if (startTagMatch) { // 这里需要严谨一些 返回的是一个对象肯定是true
         start(startTagMatch.tagName, startTagMatch.attrs);
         // 匹配完开始标签 需要进行下一轮的匹配
         continue;
@@ -94,7 +151,8 @@ export function parseHTML(html) {
     // 中间的部分是有文本的。
     let text;
     if (textend > 0) {
-      text = html.substring(0, textend); // substring 这个api的特点是不是包含头部而不包含尾部呢 这个需要确认一下。
+      // substring 这个api的特点是不是包含头部而不包含尾部呢 这个需要确认一下。
+      text = html.substring(0, textend); 
     }
     // 如果text 存在说明解析到了文本
     if (text) {
@@ -102,51 +160,6 @@ export function parseHTML(html) {
       chars(text)
       // console.log(html); // <div id="my">hello {{name}}<span>world</span></div></div>
     }
-  }
-  // 前进方法, 将匹配到的字符串删除掉，继续匹配后面的内容
-  function advance(n) {
-    // 将截取出来的字符串重新赋值给html
-    html = html.substring(n);
-  }
-  //  
-  function parseStartTag() {
-    // 字符串的match方法 返回的是一个数组
-    const start = html.match(startTagOpen);
-    if (start) { // 匹配到的数组不为空
-      // 创建一个对象
-      const match = {
-        tagName: start[1],
-        attrs: [],
-      }
-      // 传入的这个是 <div 的长度删除开始标签
-      advance(start[0].length);
-
-      // console.log(html);
-
-      // 开始匹配属性，这个属性可能有多个，所以这里使用while循环
-      // 循环的条件是 不是结尾标签，且属性还没有匹配完毕
-      // 这种写法还是第一次看见
-      let end;
-      let attr;
-      while (!(end = html.match(startTagClose)) && (attr = html.match(attribute))) {
-        // 根据正则匹配的规则能够将 属性进行分组
-        match.attrs.push({
-          name: attr[1],
-          value: attr[3] || attr[4] || attr[5]
-        })
-        // 匹配完毕属性之后继续前进，前进多少呢，当前匹配字符串的第0个的length;
-        advance(attr[0].length);
-        // console.log(html);
-      }
-      // 循环完毕属性之后 还会有一个结束标签 我们也要将结束标签去掉
-      if (end) {
-        // 如果哦结束标签存在的话,将结束标签也去掉。
-        advance(end[0].length);
-        return match // 将 match的结果返回出去,开头的标签匹配宣告结束。
-      }
-      console.log(html);
-    }
-
   }
   // 将这个树返回出去
   return root;
