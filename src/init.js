@@ -33,7 +33,7 @@ export function initMixin(Vue) {
       let template = options.template;
       if (!template && el) { // 没有template 但是存在 el
         template = el.outerHTML;
-        console.log(template); // <div id="app">{{name}}</div> 这里拿到的其实是一个字符串
+        // console.log(template); // <div id="app">{{name}}</div> 这里拿到的其实是一个字符串
       }
       // compileToFunctions 接收一个字符串模板 生成一个render函数
       // 这是单独的一个编译的模块

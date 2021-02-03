@@ -6,7 +6,6 @@ const startTagOpen = new RegExp(("^<" + qnameCapture)); // 标签开头的正则
 const endTag = new RegExp(("^<\\/" + qnameCapture + "[^>]*>")); // y用来匹配闭合标签的
 const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/;
 const startTagClose = /^\s*(\/?)>/;
-const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g; // 匹配双大括号
 
 // 这里为什么要使用while循环呢,解析完一段就删除，直到字符串为空说明解析完毕
 export function parseHTML(html) {

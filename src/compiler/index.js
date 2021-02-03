@@ -24,7 +24,7 @@ export function compileToFunctions(template) {
   // 3、通过这颗树, 重新生成代码
   let code = generate(ast);
   // _c 类似于react中的 createElement 
-  // _v 创建虚拟节点
+  // _v 创建文本节点
   // _s 可以看成是json.stringify();
   // render() {
   //   return _c('div', 
@@ -35,5 +35,9 @@ export function compileToFunctions(template) {
   //          _v( 'hello' + _s(name)), _c('span',null, _v('hello'))
   //          )
   // }
-  console.log(code);
+  // console.log(code);
+  // 4、将字符串变成函数
+  let render = new Function(`with(this){return ${code}}`)
+  console.log(render);
+  return render
 }
