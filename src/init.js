@@ -1,5 +1,6 @@
 import { initState } from "./state";
 import { compileToFunctions } from './compiler/index.js'
+import { mountComponent } from "./lifecycle";
 
 // 导出一个方法 初始化混合 表示在vue基础上做一次混合操作
 export function initMixin(Vue) {
@@ -41,5 +42,9 @@ export function initMixin(Vue) {
       // 将生成的render 函数传递给 options 之后实例中可以引用了。
       options.render = render;
     }
+
+    // 组件的挂载流程
+    mountComponent(vm, el)
+    // console.log(options.render);
   }
 }
