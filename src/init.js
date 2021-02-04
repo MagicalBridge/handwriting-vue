@@ -27,6 +27,7 @@ export function initMixin(Vue) {
     const options = vm.$options;
     // 将这个dom元素获取到 传入
     el = document.querySelector(el);
+    vm.$el = el;
     // console.log(el);
 
     if (!options.render) {
