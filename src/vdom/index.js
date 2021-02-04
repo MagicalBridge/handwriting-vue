@@ -40,6 +40,9 @@ function createEle(vnode) {
   let { tag, children, key, data, text } = vnode;
   if (typeof tag === "string") { // 创建元素放在vnode.el 上
     vnode.el = document.createElement(tag);
+
+    // 只有元素才有属性
+    updateProperties(vnode);
     children.forEach(child => { // 遍历儿子，将儿子的渲染结果放进父亲中
       vnode.el.appendChild(createEle(child))
     })
@@ -47,4 +50,27 @@ function createEle(vnode) {
     vnode.el = document.createTextNode(text)
   }
   return vnode.el
+}
+
+/**
+* @module index
+* @author: louis
+* @description: 给dom节点添加属性
+* @since: 2021-02-04 20:39:09
+*/
+function updateProperties(vnode) {
+  let el = vnode.el;
+  let newProps = vnode.data || {};
+  for (let key in newProps) { // 对象使用for in 循环
+    // 这里对style 属性做单独处理
+    if (key == 'style') {
+      for (let styleName in newProps.style) {
+        el.style[styleName] = newProps.style[styleName]
+      }
+    } else if (key == 'class') {
+      el.className = el.class;
+    } else {
+      el.setAttribute(key, newProps[key])
+    }
+  }
 }
