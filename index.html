@@ -10,6 +10,12 @@
   <div id="app" style="font-size:16px;">{{name}}world</div>
   <script src="./dist/umd/vue.js"></script>
   <script>
+    Vue.mixin({
+      created: function a() {
+        console.log("我是全局的 mixin 函数中的create")
+      }
+    })
+
     let vm = new Vue({
       el: '#app',
       data() {
@@ -17,6 +23,9 @@
           name: 'louis'
         }
       },
+      created() { // 可以认为生命周期函数是回调函数先订阅 在需要执行的地方执行
+        console.log("我是实例vue上面的created方法");
+      }
       // render(h) { // 先找render
       //   h('<div>', { id: 'a', }, 'hello')
       // }
