@@ -38,6 +38,6 @@ export function compileToFunctions(template) {
   // console.log(code);
   // 4、将字符串变成函数
   let render = new Function(`with(this){return ${code}}`)
-  console.log(render);
+  // console.log(render);
   return render
 }
