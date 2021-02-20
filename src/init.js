@@ -1,6 +1,6 @@
 import { initState } from "./state";
 import { compileToFunctions } from './compiler/index.js'
-import { mountComponent } from "./lifecycle";
+import { callHook, mountComponent } from "./lifecycle";
 import { mergeOptions } from "./util";
 
 // 导出一个方法 初始化混合 表示在vue基础上做一次混合操作
@@ -15,10 +15,12 @@ export function initMixin(Vue) {
     // 就好比全局有声明的mixin 自己
     vm.$options = mergeOptions(vm.constructor.options, options);
 
-    console.log(vm.$options);
-
+    // console.log(vm.$options);
+    callHook(vm, 'beforeCreate')
     // 初始化数据 将当前的实例传递进去 数据劫持 
     initState(vm);
+    // 在不同的阶段调取不同的生命周期
+    callHook(vm, 'created')
 
     // 如果当前有el属性，说明要渲染模板
     if (vm.$options.el) {
