@@ -1,6 +1,7 @@
 import { initState } from "./state";
 import { compileToFunctions } from './compiler/index.js'
 import { mountComponent } from "./lifecycle";
+import { mergeOptions } from "./util";
 
 // 导出一个方法 初始化混合 表示在vue基础上做一次混合操作
 export function initMixin(Vue) {
@@ -10,7 +11,12 @@ export function initMixin(Vue) {
     // 这里将this保存下来给vm变量
     const vm = this;
     // 将用户传递进来的配置选项赋值给当前实例的$options属性,保存
-    vm.$options = options;
+    // 这里需要将 全局的 一些options 和当前的组件实例的options做一个合并
+    // 就好比全局有声明的mixin 自己
+    vm.$options = mergeOptions(vm.constructor.options, options);
+
+    console.log(vm.$options);
+
     // 初始化数据 将当前的实例传递进去 数据劫持 
     initState(vm);
 

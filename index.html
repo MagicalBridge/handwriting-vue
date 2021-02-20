@@ -10,9 +10,16 @@
   <div id="app" style="font-size:16px;">{{name}}world</div>
   <script src="./dist/umd/vue.js"></script>
   <script>
+    // 混合
     Vue.mixin({
       created: function a() {
-        console.log("我是全局的 mixin 函数中的create")
+        console.log("我是全局的 mixin a")
+      }
+    })
+    
+    Vue.mixin({
+      created: function b() {
+        console.log("我是全局的 mixin b")
       }
     })
 

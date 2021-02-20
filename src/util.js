@@ -38,7 +38,10 @@ export const LIFECYCLE_HOOKS = [
  * 策略模式
  */
 const strats = {};
-strats.data = function () { }
+// data 如何合并
+strats.data = function (parentval, childval) { 
+  return childval
+}
 
 strats.computed = function () { }
 
@@ -48,7 +51,15 @@ strats.watch = function () { }
  * 合并生命周期的方法
  */
 function mergeHook(parentval, childval) {
-
+  if (childval) {
+    if (parentval) {
+      return parentval.concat(childval)  // 将爸爸和儿子进行拼接
+    } else {
+      return [childval]; // 将儿子转换为数组
+    }
+  } else { // 如果儿子没有值直接返回父亲
+    return parentval
+  }
 }
 
 // 调用数组的forEach方法
@@ -78,12 +89,15 @@ export function mergeOptions(parent, child) {
     }
   }
 
+  // 合并字段
   function mergeField(key) {
     if (strats[key]) {
-      strats[key](parent[key], child(key))
+      options[key] = strats[key](parent[key], child[key])
+    } else {
+      // todo 默认合并
+      options[key] = child[key]
     }
   }
-
   // 儿子有父亲没有
   return options
 }
