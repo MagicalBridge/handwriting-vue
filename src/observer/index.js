@@ -1,5 +1,6 @@
 import { isObject } from "../util";
 import { arrayMethods } from "./array";
+import Dep from "./dep";
 
 // 这个文件是用于观测数据的变化的
 class Observer {
@@ -10,7 +11,7 @@ class Observer {
     // 注意 使用这个方法定义的属性是不会被枚举的到，不可枚举的好处是不会造成死循环
     Object.defineProperty(value, '__ob__', {
       enumerable: false, // 属性是否可以枚举，这里写的是不可枚举 循环的时候不会循环到这个属性
-      configurable: false, 
+      configurable: false,
       value: this // 代表的是当前的 Observer 实例 赋值给 __ob__ 类似于这样 {__ob__: Observer }
     })
 
@@ -55,7 +56,9 @@ function defineReactive(data, key, value) {
   // 这里需要一个递归的调用, 将传入的值再次放入 observe 检测一下。
   // 如果value还是一个对象，继续进行递归响应式。
   observe(value)
+  let dep = new Dep(); // 每个属性都有一个dep
   Object.defineProperty(data, key, {
+    // 当页面取值的时候，说明这个页面用来渲染了
     get() {
       // console.log('用户获取值了');
       return value;
