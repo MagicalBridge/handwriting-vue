@@ -34,6 +34,8 @@ export function patch(oldVnode, vnode) {
   parentElement.insertBefore(el, oldVnode.nextsibling); // 当前的真实元素插入到app后面
   // 删除老的子节点
   parentElement.removeChild(oldVnode)
+  // 第一次渲染完毕将最新的el返回出去。
+  return el;
 }
 
 function createEle(vnode) {

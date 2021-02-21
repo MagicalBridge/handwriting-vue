@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
+
 <body>
   <div id="app" style="font-size:16px;">{{name}}world</div>
   <script src="./dist/umd/vue.js"></script>
@@ -16,7 +17,7 @@
         console.log("我是全局的 mixin a")
       }
     })
-    
+
     Vue.mixin({
       created: function b() {
         console.log("我是全局的 mixin b")
@@ -45,6 +46,11 @@
     // 3、如果template也没有传 就看看你有没有el属性 找el 中的指定的内容来进行渲染页面
     // 最终会将template变成 render 方法，总结一句话就是，vue 渲染的时候最终只认 render 函数
 
+    // 设置一个场景，就是每次渲染完之后过来一秒钟修改数据，看看是什么效果
+    setTimeout(() => {
+      vm.name = '褚鹏飞'
+      vm._update(vm._render())
+    }, 1000)
   </script>
 </body>
 

@@ -4,7 +4,8 @@ export function lifecycleMixin(Vue) {
   Vue.prototype._update = function (vnode) {
     const vm = this;
     // console.log(vnode);
-    patch(vm.$el, vnode)
+    // 渲染完之后 用创建的元素 替换老的元素
+    vm.$el = patch(vm.$el, vnode)
   }
 }
 
