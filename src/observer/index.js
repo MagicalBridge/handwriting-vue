@@ -58,9 +58,11 @@ function defineReactive(data, key, value) {
   observe(value)
   let dep = new Dep(); // 每个属性都有一个dep
   Object.defineProperty(data, key, {
-    // 当页面取值的时候，说明这个页面用来渲染了
+    // 当页面取值的时候，说明这个值被用作页面渲染了, 将这个watcher和这个属性对应起来
     get() {
-      // console.log('用户获取值了');
+      if(Dep.target) { // 页面正在渲染 让这个属性记住这个watcher
+        dep.depend(); // 
+      }
       return value;
     },
     set(newValue) {
