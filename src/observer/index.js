@@ -61,7 +61,7 @@ function defineReactive(data, key, value) {
     // 当页面取值的时候，说明这个值被用作页面渲染了, 将这个watcher和这个属性对应起来
     get() {
       if(Dep.target) { // 页面正在渲染 让这个属性记住这个watcher
-        dep.depend(); // 
+        dep.depend();  // 
       }
       return value;
     },
@@ -75,6 +75,8 @@ function defineReactive(data, key, value) {
       observe(value)
       // 将新的值赋值给value
       value = newValue;
+      // 在取值的时候将这个watcher拿出来执行
+      dep.notify();
     }
   })
 }
