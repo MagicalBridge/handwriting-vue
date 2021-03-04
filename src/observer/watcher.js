@@ -37,7 +37,7 @@ class Watcher {
     this.getter();
     popTarget();
   }
-
+  // 这个update方法，就是在 set的时候 dep 触发notify 方法触发的
   update() {
     // 执行的时候重新调用get方法
     this.get();
