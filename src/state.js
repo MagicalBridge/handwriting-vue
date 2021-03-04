@@ -50,7 +50,7 @@ function initData(vm) {
   for (let key in data) {
     proxy(vm, '_data', key);
   }
-  // 单独将数据响应式的功能提取出来
+  // 单独将数据响应式的功能提取出来，将用户传入的date做响应式操作
   observe(data)
 }
 function initComputed() { }

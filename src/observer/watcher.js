@@ -5,6 +5,7 @@ let id = 0;
 class Watcher {
   // vm 实例
   // exprOFn vm._update(vm._render())
+  // cb 
   constructor(vm, exprOFn, cb, options) {
     this.vm = vm;
     this.exprOFn = exprOFn;
@@ -15,10 +16,10 @@ class Watcher {
     this.depsId = new Set(); // 使用set这种数据结构的特性
     // 如果是个函数
     if (typeof exprOFn === 'function') {
-      // 将这个函数挂载在一个属性上
+      // 将这个函数挂载在一个属性上 这里是将函数挂载到getter上面
       this.getter = exprOFn;
     }
-    // new watcher的时候默认会地会调用get方法
+    // new watcher的时候默认会地会调用get方法 get 方法就是执行一下这个渲染方法
     this.get();
   }
   addDep(dep) {

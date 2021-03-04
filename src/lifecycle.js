@@ -21,8 +21,7 @@ export function mountComponent(vm, el) {
   let watcher = new Watcher(vm, updateComponent, () => {
     callHook(vm, 'beforeUpdate')
   }, true);
-
-  // 
+  
   callHook(vm, 'mounted');
   // updateComponent();
 }

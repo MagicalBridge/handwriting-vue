@@ -81,6 +81,10 @@ function defineReactive(data, key, value) {
   })
 }
 
+/**
+ * 响应式数据的核心是 `new Observer` 类 这点务必需要注意。
+ * @param {*} data 
+ */
 export function observe(data) {
   // 响应式数据是有条件的, 观测的内容必须是一个对象，且不能是null
   // 如果不是对象直接return不做后续处理，这一步的判断非常重要
