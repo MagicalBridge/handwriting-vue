@@ -31,7 +31,7 @@ export function patch(oldVnode, vnode) {
   // 将虚拟节点转化为真实节点
   let el = createEle(vnode) // 产生真实的dom
   let parentElement = oldVnode.parentNode // 获取老的app的父亲 body
-  parentElement.insertBefore(el, oldVnode.nextsibling); // 当前的真实元素插入到app后面
+  parentElement.insertBefore(el, oldVnode.nextSibling); // 当前的真实元素插入到app后面
   // 删除老的子节点
   parentElement.removeChild(oldVnode)
   // 第一次渲染完毕将最新的el返回出去。

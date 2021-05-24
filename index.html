@@ -12,17 +12,17 @@
   <script src="./dist/umd/vue.js"></script>
   <script>
     // 混合
-    Vue.mixin({
-      created: function a() {
-        console.log("我是全局的 mixin a")
-      }
-    })
+    // Vue.mixin({
+    //   created: function a() {
+    //     console.log("我是全局的 mixin a")
+    //   }
+    // })
 
-    Vue.mixin({
-      created: function b() {
-        console.log("我是全局的 mixin b")
-      }
-    })
+    // Vue.mixin({
+    //   created: function b() {
+    //     console.log("我是全局的 mixin b")
+    //   }
+    // })
 
     let vm = new Vue({
       el: '#app',
@@ -31,14 +31,15 @@
           name: 'louis'
         }
       },
-      created() { // 可以认为生命周期函数是回调函数先订阅 在需要执行的地方执行
-        console.log("我是实例vue上面的created方法");
-      }
+      // created() { // 可以认为生命周期函数是回调函数先订阅 在需要执行的地方执行
+      //   console.log("我是实例vue上面的created方法");
+      // }
       // render(h) { // 先找render
       //   h('<div>', { id: 'a', }, 'hello')
       // }
       // template
     });
+    console.log(vm);
     // 渲染的操作:
     // 1、默认会先找render方法 这个render方法里面有一个 h方法, 类似于 react中的createElement 
     // 这个渲染方法的优先级要高,
@@ -47,9 +48,9 @@
     // 最终会将template变成 render 方法，总结一句话就是，vue 渲染的时候最终只认 render 函数
 
     // 设置一个场景，就是每次渲染完之后过来一秒钟修改数据，看看是什么效果
-    setTimeout(() => {
-      vm.name = '褚鹏飞'
-    }, 1000)
+    // setTimeout(() => {
+    //   vm.name = '褚鹏飞'
+    // }, 1000)
   </script>
 </body>
 

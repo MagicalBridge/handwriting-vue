@@ -6,7 +6,7 @@ import Dep from "./dep";
 class Observer {
   constructor(value) {
     // 这里使用defineProperty 定义一个 __ob__ 属性
-    // object.defineProperty 方法会直接在一个对象上定义一个新属性。
+    // object.defineProperty 方法会直接在一个对象上定义一个新属性。·
     // 或者修改一个对象的现有属性，并返回此对象。判断一个对象是否被观测过，看它有没有 __ob__ 属性
     // 注意 使用这个方法定义的属性是不会被枚举的到，不可枚举的好处是不会造成死循环
     Object.defineProperty(value, '__ob__', {
